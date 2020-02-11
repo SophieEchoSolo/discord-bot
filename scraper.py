@@ -20,7 +20,7 @@ async def on_ready():
 async def ping(ctx):
     '''Returns pong when called'''
     author = ctx.message.author.name
-    server = ctx.message.server.name
-    await bot.say('Pong for {} from {}!'.format(author, server))
+    guild = ctx.message.guild.name
+    await bot.say('Pong for {} from {}!'.format(author, guild))
 
 bot.run(token)
