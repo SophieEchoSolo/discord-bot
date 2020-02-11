@@ -1,20 +1,26 @@
 import os
-
+import discord
 from discord.ext import commands
 from dotenv import load_dotenv
 
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
 
-bot = commands.Bot(command_prefix='!')
+description = 'A seed bot that does nothing'
+bot = commands.Bot(command_prefix='?', description=description)
 
 @bot.event
-async def on_message(message):
-    guild = message.guild
-    if guild:
-        path = "chatlogs/{}.txt".format(guild.id)  
-        with open(path, 'a+') as f:
-            print("{0.timestamp} : {0.author.name} : {0.content}".format(message), file=f)
-    await bot.process_commands(message)
+async def on_ready():
+    print(bot.user.id)
+    print(bot.user.name)
+    print('---------------')
+    print('This bot is ready for action!')
+
+@bot.command(pass_context=True)
+async def ping(ctx):
+    '''Returns pong when called'''
+    author = ctx.message.author.name
+    server = ctx.message.server.name
+    await bot.say('Pong for {} from {}!'.format(author, server))
 
 bot.run(token)
