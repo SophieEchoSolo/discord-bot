@@ -20,13 +20,13 @@ def housing_parser(embed):
     '''
     scrubbed = {}
     try:
-        areanum = embed["fields"][1]["value"].find("m")
-        rentnum = embed["fields"][2]["value"].find("kr")
+        area_end = embed["fields"][1]["value"].find("m")
+        rent_end = embed["fields"][2]["value"].find("kr")
 
         scrubbed["street"] = embed["author"]["name"]
         scrubbed["rooms"] = int(embed["fields"][0]["value"][0])
-        scrubbed["area"] = int(embed["fields"][1]["value"][0:areanum])
-        scrubbed["rent"] = int(embed["fields"][2]["value"][0:rentnum])
+        scrubbed["area"] = int(embed["fields"][1]["value"][0:area_end])
+        scrubbed["rent"] = int(embed["fields"][2]["value"][0:rent_end])
         scrubbed["story"] = int(embed["fields"][3]["value"])
         scrubbed["applicants"] = int(embed["fields"][4]["value"])
         scrubbed["points"] = int(embed["fields"][5]["value"][12:-2])
