@@ -29,6 +29,7 @@ async def ping(ctx):
 
 @bot.event
 async def on_message(message):
+    embed = str(discord.Embed.copy(self.message))
     author = str(message.author)
     content = str(message.content)
     userid = str(message.author.id) 
@@ -36,12 +37,12 @@ async def on_message(message):
     time = str(message.created_at)
     link = str(message.jump_url)
     channel = str(message.channel)
-    row = [userid,author,content,time,messageid,link,channel]
+    row = [userid,author,content,time,messageid,link,channel, embed]
     try:
         f = open("history.txt", "a")
         f.write(f"{row}\n")
         f.close()
-    except expression as identifier:
+    except:
         print("Can't write")
     finally:
         pass
