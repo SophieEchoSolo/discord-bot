@@ -29,15 +29,8 @@ async def ping(ctx):
 
 @bot.event
 async def on_message(message):
-    embed = str(discord.Embed.copy(self.message))
-    author = str(message.author)
-    content = str(message.content)
-    userid = str(message.author.id) 
-    messageid = str(message.id)
-    time = str(message.created_at)
-    link = str(message.jump_url)
-    channel = str(message.channel)
-    row = [userid,author,content,time,messageid,link,channel, embed]
+    embed = str(message.embeds[0].to_dict())
+    row = [embed]
     try:
         f = open("history.txt", "a")
         f.write(f"{row}\n")
