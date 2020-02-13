@@ -14,6 +14,20 @@ token = os.getenv('DISCORD_TOKEN')
 description = 'A seed bot that does nothing'
 bot = commands.Bot(command_prefix='?', description=description)
 
+def housing_parser(embed):
+    '''
+    This method will remove keys not needed from the housing message dictionary 
+    '''
+    try:
+        del embed["image"]
+        del embed["thumbnail"]
+        del embed["author"]["url"]
+        del embed["color"]
+        del embed["type"]
+    except KeyError:
+        print("Key not found")
+
+
 @bot.event
 async def on_ready():
     print(bot.user.name)
@@ -29,16 +43,18 @@ async def ping(ctx):
 
 @bot.event
 async def on_message(message):
-    embed = str(message.embeds[0].to_dict())
-    row = [embed]
+    embed = message.embeds[0].to_dict()
+    time = str(message.created_at)
+    housing_parser(embed)
     try:
         f = open("history.txt", "a")
-        f.write(f"{row}\n")
+        f.write(f"{embed} {time}\n")
         f.close()
     except:
         print("Can't write")
     finally:
         pass
     await bot.process_commands(message)
+
 
 bot.run(token)
