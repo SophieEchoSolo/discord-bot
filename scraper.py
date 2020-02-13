@@ -16,14 +16,22 @@ bot = commands.Bot(command_prefix='?', description=description)
 
 def housing_parser(embed):
     '''
-    This method will remove keys not needed from the housing message dictionary 
+    This method will create a new dictionary with relevant key:value pairs 
     '''
+    scrubbed = {}
     try:
-        del embed["image"]
-        del embed["thumbnail"]
-        del embed["author"]["url"]
-        del embed["color"]
-        del embed["type"]
+        scrubbed["street"] = embed["author"]["name"]
+        scrubbed["rooms"] = embed["fields"][0]["value"]
+        scrubbed["area"] = embed["fields"][1]["value"]
+        scrubbed["rent"] = embed["fields"][2]["value"]
+        scrubbed["story"] = embed["fields"][3]["value"]
+        scrubbed["applicants"] = embed["fields"][4]["value"]
+        scrubbed["points"] = embed["fields"][5]["value"]
+        scrubbed["built"] = embed["fields"][6]["value"]
+        scrubbed["renovated"] = embed["fields"][7]["value"]
+        scrubbed["last_app"] = embed["fields"][8]["value"]
+        scrubbed["date_added"] = embed["timestamp"]
+        
     except KeyError:
         print("Key not found")
 
@@ -55,6 +63,5 @@ async def on_message(message):
     finally:
         pass
     await bot.process_commands(message)
-
 
 bot.run(token)
