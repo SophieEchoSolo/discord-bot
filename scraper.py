@@ -20,17 +20,22 @@ def housing_parser(embed):
     '''
     scrubbed = {}
     try:
+        areanum = embed["fields"][1]["value"].find("m")
+        rentnum = embed["fields"][2]["value"].find("kr")
+
         scrubbed["street"] = embed["author"]["name"]
-        scrubbed["rooms"] = embed["fields"][0]["value"]
-        scrubbed["area"] = embed["fields"][1]["value"]
-        scrubbed["rent"] = embed["fields"][2]["value"]
-        scrubbed["story"] = embed["fields"][3]["value"]
-        scrubbed["applicants"] = embed["fields"][4]["value"]
-        scrubbed["points"] = embed["fields"][5]["value"]
-        scrubbed["built"] = embed["fields"][6]["value"]
-        scrubbed["renovated"] = embed["fields"][7]["value"]
+        scrubbed["rooms"] = int(embed["fields"][0]["value"][0])
+        scrubbed["area"] = int(embed["fields"][1]["value"][0:areanum])
+        scrubbed["rent"] = int(embed["fields"][2]["value"][0:rentnum])
+        scrubbed["story"] = int(embed["fields"][3]["value"])
+        scrubbed["applicants"] = int(embed["fields"][4]["value"])
+        scrubbed["points"] = int(embed["fields"][5]["value"][12:-2])
+        scrubbed["built"] = int(embed["fields"][6]["value"])
+        scrubbed["renovated"] = int(embed["fields"][7]["value"])
         scrubbed["last_app"] = embed["fields"][8]["value"]
         scrubbed["date_added"] = embed["timestamp"]
+
+        print(scrubbed)
         
     except KeyError:
         print("Key not found")
