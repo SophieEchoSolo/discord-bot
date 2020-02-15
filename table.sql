@@ -15,5 +15,5 @@ CREATE TABLE IF NOT EXISTS houses (
     built INT,
     renovated INT,
     last_app DATETIME,
-    date_added DATETIME
+    date_added DATETIME DEFAULT NOW()
 );

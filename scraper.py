@@ -5,23 +5,22 @@ import asyncio
 from discord.ext import commands
 from discord.ext.commands import bot
 from dotenv import load_dotenv
-from sqlalchemy import engine, create_engine
-from sqlalchemy.orm import sessionmaker
+import pymysql.cursors
 from models import Base, Houses
 
-engine = create_engine('sqlite:///houses-bot.db', echo=False)
-Session = sessionmaker(bind=engine)
-session = Session()
+# Connect to the database
+connection = pymysql.connect(host='localhost',
+							 user='root',
+							 password='',
+							 db='housing',
+							 charset='utf8mb4',
+							 cursorclass=pymysql.cursors.DictCursor)
 
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
 
 description = 'A seed bot that does nothing'
 bot = commands.Bot(command_prefix='?', description=description)
-
-# If table doesn't exist, Create the database
-if not engine.dialect.has_table(engine, 'places'):
-    Base.metadata.create_all(engine)
 
 def housing_parser(embed):
     '''
@@ -77,13 +76,15 @@ async def on_message(message):
         f.write(f"{embed} {time}\n")
         f.close()
 
-        placeholders = ', '.join(['%s'] * len(results))
-        columns = ', '.join(results.keys())
-        sql = "INSERT INTO %s ( %s ) VALUES ( %s )" %('houses', columns, placeholders)
-        engine.execute(sql, results.values())
+        with connection.cursor() as cursor:
+            sql = """INSERT INTO houses (street, region, rooms, area, rent, story, applicants, points, built, renovated, last_app) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+            val = (results["street"], results["region"], results["rooms"], results["area"], results["rent"], results["story"], results["applicants"], results["points"], results["built"], results["renovated"], results["last_app"])
+            cursor.execute(sql, val)
+            connection.commit()
+            cursor.close()
 
     except:
-        print("Can't write")
+        print(e)
     finally:
         pass
     await bot.process_commands(message)
@@ -96,4 +97,4 @@ if __name__ == '__main__':
         print(e)
     finally:
         print('Closing Session')
-        session.close()
+        connection.close()
