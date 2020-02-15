@@ -69,13 +69,8 @@ async def on_message(message):
     Appends message context to a text file
     '''
     embed = message.embeds[0].to_dict()
-    time = str(message.created_at)
     results = housing_parser(embed)
     try:
-        f = open("history.txt", "a")
-        f.write(f"{embed} {time}\n")
-        f.close()
-
         with connection.cursor() as cursor:
             sql = """INSERT INTO houses (street, region, rooms, area, rent, story, applicants, points, built, renovated, last_app) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
             val = (results["street"], results["region"], results["rooms"], results["area"], results["rent"], results["story"], results["applicants"], results["points"], results["built"], results["renovated"], results["last_app"])
@@ -83,7 +78,8 @@ async def on_message(message):
             connection.commit()
             cursor.close()
 
-    except:
+    except Exception as e:
+        print("Unable to write to database")
         print(e)
     finally:
         pass
