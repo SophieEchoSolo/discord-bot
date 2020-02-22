@@ -1,6 +1,5 @@
 import os
 import discord
-import datetime
 import asyncio
 from discord.ext import commands
 from discord.ext.commands import bot
