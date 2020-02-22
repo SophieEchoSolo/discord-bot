@@ -65,7 +65,7 @@ async def ping(ctx):
 @bot.event
 async def on_message(message):
     '''
-    Appends message context to a text file
+    Inserts data into MySQL DB 
     '''
     embed = message.embeds[0].to_dict()
     results = housing_parser(embed)
