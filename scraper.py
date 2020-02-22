@@ -67,6 +67,12 @@ async def on_message(message):
     '''
     Inserts data into MySQL DB 
     '''
+    await bot.process_commands(message)
+
+    author = message.author.id 
+    if author != 449752516469456906 & len(message.embeds)<1:
+        return
+
     embed = message.embeds[0].to_dict()
     results = housing_parser(embed)
     try:
@@ -82,7 +88,7 @@ async def on_message(message):
         print(e)
     finally:
         pass
-    await bot.process_commands(message)
+
 
 if __name__ == '__main__':
     try:

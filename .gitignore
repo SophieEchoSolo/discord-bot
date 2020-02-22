@@ -1,0 +1,9 @@
+.env
+ALTER
+
+.vscode/settings.json
+FLUSH
+history.txt
+__pycache__/models.cpython-36.pyc
+places-bot.db
+houses-bot.db
