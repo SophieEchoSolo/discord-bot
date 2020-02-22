@@ -6,7 +6,6 @@ from discord.ext import commands
 from discord.ext.commands import bot
 from dotenv import load_dotenv
 import pymysql.cursors
-from models import Base, Houses
 
 # Connect to the database
 connection = pymysql.connect(host='localhost',
