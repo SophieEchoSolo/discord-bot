@@ -74,7 +74,7 @@ async def on_message(message):
     await bot.process_commands(message)
 
     author = message.author.id 
-    if author != 449752516469456906 & len(message.embeds)<1:
+    if author != 449752516469456906 and len(message.embeds)<1:
         return
 
     embed = message.embeds[0].to_dict()
