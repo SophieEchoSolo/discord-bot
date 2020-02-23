@@ -94,7 +94,7 @@ async def on_message(message):
         pass
 
 @bot.command(pass_context=True)
-async def plot(ctx):
+async def plots(ctx):
     '''Runs plots when called. This code will create the bar charts and then post them into the channel where requested.'''
     author = ctx.message.author.name
     channel = ctx.message.channel
