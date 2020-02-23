@@ -22,7 +22,7 @@ connection = pymysql.connect(host='localhost',
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
 
-description = 'A seed bot that does nothing'
+description = 'This bot is made to scrub housing data and create plots using a MySQL database'
 bot = commands.Bot(command_prefix='?', description=description)
 
 def housing_parser(embed):
@@ -69,7 +69,7 @@ async def ping(ctx):
 @bot.event
 async def on_message(message):
     '''
-    Inserts data into MySQL DB 
+    Inserts data into MySQL DB using the scrubbed version of data posted by another bot 
     '''
     await bot.process_commands(message)
 
@@ -95,13 +95,15 @@ async def on_message(message):
 
 @bot.command(pass_context=True)
 async def plot(ctx):
-    '''Runs plots when called'''
-    # figure out how to get the file to insert
+    '''Runs plots when called. This code will create the bar charts and then post them into the channel where requested.'''
     author = ctx.message.author.name
+    channel = ctx.message.channel
     await ctx.channel.send('{} here is your plots'.format(author))
     hbar_chart(sql = """SELECT region AS label, AVG(rent) AS value FROM houses GROUP BY region ORDER BY value DESC;""", file_name = "rent-per-region.png", plot_title = "Avg Rent By Region")
     hbar_chart(sql = """SELECT region AS label, ROUND(SUM(rent)/SUM(rooms)) AS value FROM houses GROUP BY region ORDER BY value DESC;""", file_name = "rent-per-room-per-region.png", plot_title = "Avg Room Rent By Region")    
-    await ctx.channel.send(content = "Rent Per Region", File = "rent-per-region.png")
+    await channel.send(file=discord.File('rent-per-region.png'))
+    await channel.send(file=discord.File('rent-per-room-per-region.png'))
+
 
 if __name__ == '__main__':
     try:
