@@ -7,3 +7,5 @@ history.txt
 __pycache__/models.cpython-36.pyc
 places-bot.db
 houses-bot.db
+rent-per-region.png
+rent-per-room-per-region.png

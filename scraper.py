@@ -7,7 +7,9 @@ from dotenv import load_dotenv
 import pymysql.cursors
 import sys
 sys.path.insert(1, '../houseplots/')
+# pylint: disable=import-error
 from plots import *
+# pylint: enable=import-error
 
 # Connect to the database
 connection = pymysql.connect(host='localhost',
