@@ -93,6 +93,15 @@ async def on_message(message):
     finally:
         pass
 
+@bot.command(pass_context=True)
+async def plot(ctx):
+    '''Runs plots when called'''
+    # figure out how to get the file to insert
+    author = ctx.message.author.name
+    await ctx.channel.send('{} here is your plots'.format(author))
+    hbar_chart(sql = """SELECT region AS label, AVG(rent) AS value FROM houses GROUP BY region ORDER BY value DESC;""", file_name = "rent-per-region.png", plot_title = "Avg Rent By Region")
+    hbar_chart(sql = """SELECT region AS label, ROUND(SUM(rent)/SUM(rooms)) AS value FROM houses GROUP BY region ORDER BY value DESC;""", file_name = "rent-per-room-per-region.png", plot_title = "Avg Room Rent By Region")    
+    await ctx.channel.send(content = "Rent Per Region", File = "rent-per-region.png")
 
 if __name__ == '__main__':
     try:
