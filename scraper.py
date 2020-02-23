@@ -5,6 +5,9 @@ from discord.ext import commands
 from discord.ext.commands import bot
 from dotenv import load_dotenv
 import pymysql.cursors
+import sys
+sys.path.insert(1, '../houseplots/')
+from plots import *
 
 # Connect to the database
 connection = pymysql.connect(host='localhost',
