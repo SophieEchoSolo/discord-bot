@@ -25,6 +25,18 @@ token = os.getenv('DISCORD_TOKEN')
 description = 'This bot is made to scrub housing data and create plots using a MySQL database'
 bot = commands.Bot(command_prefix='?', description=description)
 
+def int_or_null(my_string):
+    '''
+    This function checks if data passed in is a string or integer
+    '''
+    if my_string.isdigit():
+        result = int(my_string)
+        return result
+
+    else:
+        result = "Null"
+        return result
+
 def housing_parser(embed):
     '''
     This method will create a new dictionary with relevant key:value pairs 
@@ -38,14 +50,14 @@ def housing_parser(embed):
 
         scrubbed["street"] = embed["author"]["name"][0:region_start-1]
         scrubbed["region"] = embed["author"]["name"][region_start+1:region_end]
-        scrubbed["rooms"] = int(embed["fields"][0]["value"][0])
-        scrubbed["area"] = int(embed["fields"][1]["value"][0:area_end])
+        scrubbed["rooms"] = int_or_null(embed["fields"][0]["value"][0])
+        scrubbed["area"] = int_or_null(embed["fields"][1]["value"][0:area_end])
         scrubbed["rent"] = int(embed["fields"][2]["value"][0:rent_end])
-        scrubbed["story"] = int(embed["fields"][3]["value"])
-        scrubbed["applicants"] = int(embed["fields"][4]["value"])
+        scrubbed["story"] = int_or_null(embed["fields"][3]["value"])
+        scrubbed["applicants"] = int_or_null(embed["fields"][4]["value"])
         scrubbed["points"] = int(embed["fields"][5]["value"][12:-2])
-        scrubbed["built"] = int(embed["fields"][6]["value"])
-        scrubbed["renovated"] = int(embed["fields"][7]["value"])
+        scrubbed["built"] = int_or_null(embed["fields"][6]["value"])
+        scrubbed["renovated"] = int_or_null(embed["fields"][7]["value"])
         scrubbed["last_app"] = embed["fields"][8]["value"]
         scrubbed["date_added"] = embed["timestamp"]
         return scrubbed      
@@ -83,13 +95,15 @@ async def on_message(message):
         with connection.cursor() as cursor:
             sql = """INSERT INTO houses (street, region, rooms, area, rent, story, applicants, points, built, renovated, last_app) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
             val = (results["street"], results["region"], results["rooms"], results["area"], results["rent"], results["story"], results["applicants"], results["points"], results["built"], results["renovated"], results["last_app"])
+        try:
             cursor.execute(sql, val)
-            connection.commit()
+        finally:
             cursor.close()
+        connection.commit()
 
     except Exception as e:
-        print("Unable to write to database")
         print(e)
+        print("Unable to write to database")
     finally:
         pass
 
